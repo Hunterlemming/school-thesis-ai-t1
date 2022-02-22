@@ -1,7 +1,7 @@
 from typing import Dict, List, Optional
 import pandas as pd
 
-from services.log_parser import parse_default_csv_to_days
+from services.log_parser import parse_default_csv
 
 
 def create_csv_1():
@@ -9,6 +9,5 @@ def create_csv_1():
 
 
 if __name__ == "__main__":
-    days = parse_default_csv_to_days()
-    for day in days:
-        print(day)
+    summary = parse_default_csv()
+    print(summary)
