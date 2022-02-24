@@ -21,5 +21,5 @@ if __name__ == "__main__":
     summary = parse_default_csv()
     # create_csv_1(summary)
     print(summary.days[0])
-    wh = summary.days[0].get_daily_product_per_hour_performance()
+    wh = summary.days[0].get_multiple_interval_productivities()
     print(wh)
