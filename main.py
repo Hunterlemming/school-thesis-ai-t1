@@ -21,7 +21,7 @@ def create_csv_1(log: LogSummary, actor: str):
 if __name__ == "__main__":
     summary = parse_default_csv()
     # create_csv_1(summary)
-    print(summary.days[0])
-    wh = summary.days[0].get_multiple_interval_productivities()
-    for i, prod in enumerate(wh):
-        print(f"{DEFAULT_DAY_INTERVALS[i]}: {prod}")
+    # print(summary.days[0])
+    wh = summary.get_same_date_days_with_index(0)
+    for day in wh:
+        print(day)
