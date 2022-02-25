@@ -1,21 +1,21 @@
 from typing import Dict, List
 import pandas as pd
 
-from model.day import Day
+from model.day import DaySummary
 from model.log import LogSummary
 from model.task import Task
 
 
-def get_or_create_day(days: List[Day], actor: str, date: pd.Timestamp.date) -> Day:
-    query_result = list(filter(lambda day: day.actor == actor and day.date == date, days))
-
-    if len(query_result) == 0:
-        day = Day(actor, date)
-        days.append(day)
-    else:
-        day = query_result[0]
-    
-    return day
+def get_or_create_day(days: Dict[str, Dict[str, DaySummary]], actor: str, date: pd.Timestamp.date) -> DaySummary:
+    date_str = str(date)
+    new_summary = DaySummary(actor, date)
+    if date_str in days.keys(): 
+        if actor in days[date_str].keys():
+            return days[date_str][actor]        # Returning already existing DaySummary
+        days[date_str][actor] = new_summary
+        return new_summary                      # Adding a new actor's DaySummary to a stored date_str
+    days[date_str] = {actor: new_summary}
+    return new_summary                          # Adding a brand new day, if necessary
 
 
 def parse_default_csv() -> LogSummary:
@@ -23,7 +23,7 @@ def parse_default_csv() -> LogSummary:
     
     actors: List[str] = []
     activities: List[str] = [] 
-    days: List[Day] = []
+    days: Dict[str, Dict[str, DaySummary]] = {}
 
     unfinished_tasks: Dict[str, Task] = {}
 

@@ -9,7 +9,7 @@ from utils.time_utils import earlier_of, later_of
 DEFAULT_DAY_INTERVALS: List[Tuple[str, str]] = [('08:00', '10:00'), ('10:00', '12:00'), ('12:00', '14:00'), ('14:00', '16:00')]
 
 
-class Day:
+class DaySummary:
 
     def __init__(self, actor: str, date: pd.Timestamp.date, tasks: Optional[List[Task]] = None) -> None:
         self.actor: str = actor

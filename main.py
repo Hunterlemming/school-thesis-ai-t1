@@ -20,8 +20,9 @@ def create_csv_1(log: LogSummary, actor: str):
 
 if __name__ == "__main__":
     summary = parse_default_csv()
+    print(summary)
     # create_csv_1(summary)
     # print(summary.days[0])
-    wh = summary.get_same_date_days_with_index(0)
-    for day in wh:
-        print(day)
+    # wh = summary.get_same_date_days_with_index(0)
+    # for day in wh:
+    #     print(day)
