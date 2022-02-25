@@ -17,12 +17,19 @@ class Task:
             \tIf the **value > 0** the second event happened **after** the first.\n
             \tIf the **value < 0** the second event happened **before** the first.
         """
-        delta: pd.Timedelta = pd.to_datetime(str(end)) - pd.to_datetime(str(start))
-        return delta.seconds
+        start_date, end_date = pd.to_datetime(str(start)), pd.to_datetime(str(end))
+        delta: pd.Timedelta = end_date - start_date
+        # Adding the (passed days * number of seconds in a day) to the equation. If start < end 
+        # it adds 0, otherwise we add -1 days to a positive amount of seconds to get the result.
+        delta_seconds = delta.seconds + delta.days * 86400
+        return delta_seconds
 
 
-    def end_task(self, end: pd.Timestamp.time):
+    def end_task(self, end: pd.Timestamp.time) -> None:
         self.end = end
+
+    def get_task_time_in_seconds(self) -> float:
+        return Task._task_time_delta_in_seconds(self.start, self.end)
 
 
     def __str__(self) -> str:

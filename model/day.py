@@ -3,6 +3,7 @@ import pandas as pd
 
 from model.task import Task
 from utils.logger import log_warning
+from utils.time_utils import earlier_of, later_of
 
 
 DEFAULT_DAY_INTERVALS: List[Tuple[str, str]] = [('08:00', '10:00'), ('10:00', '12:00'), ('12:00', '14:00'), ('14:00', '16:00')]
@@ -34,59 +35,58 @@ class Day:
         return self.get_daily_all_number_of_products() / self.get_daily_hours_worked()
 
 
-    def get_single_interval_productivity(
-        self, int_start: Union[str, pd.Timestamp.time], int_end: Union[str, pd.Timestamp.time]) -> float:
-        '''Returns the created number of products divided by their summed up worktime in a certain timeframe.'''
-        worktime: float = 0
-        products: int = 0
+    def get_tasks_in_interval(
+        self, int_start: Union[str, pd.Timestamp.time], int_end: Union[str, pd.Timestamp.time]) -> List[Task]:
+        '''Returns the tasks in a certain timeframe.'''
+        task_time_delta = Task._task_time_delta_in_seconds
+        int_tasks: List[Task] = []
         for task in self.tasks:
             debug_pg: int = 0
             # If the task's start is later than the interval, break the loop!
-            if Task._task_time_delta_in_seconds(task.start, int_end) < 0:
+            if task_time_delta(task.start, int_end) < 0:
                 break
             # If the task's end is earlier than the interval, continue until we reach it!
-            if Task._task_time_delta_in_seconds(task.end, int_start) > 0:
+            if task_time_delta(task.end, int_start) > 0:
                 continue
             # Otherwise
-            task_time_full = Task._task_time_delta_in_seconds(task.start, task.end)
-            task_time_before_interval = Task._task_time_delta_in_seconds(task.start, int_start)
-            task_time_in_interval = Task._task_time_delta_in_seconds(max(task.start, int_start), min(task.end, int_end))
-            task_time_after_interval = Task._task_time_delta_in_seconds(int_end, task.end)
+            task_time_before_interval = task_time_delta(task.start, int_start)
+            task_time_in_interval = task_time_delta(later_of(task.start, int_start), earlier_of(task.end, int_end))
+            task_time_after_interval = task_time_delta(int_end, task.end)
             # If the task begins earlier but ends in the interval:
             if task_time_before_interval > 0:
                 if task_time_in_interval >= task_time_before_interval:
-                    worktime += task_time_full
-                    products += 1
+                    int_tasks.append(task)
                     debug_pg += 1
             # If the task starts in the interval but ends later:
             if task_time_after_interval > 0:
                 if task_time_in_interval > task_time_after_interval:
-                    worktime += task_time_full
-                    products += 1
+                    int_tasks.append(task)
                     debug_pg += 1
             # If the entire task is in the interval:
             if task_time_after_interval <= 0 and task_time_before_interval <= 0:
-                    worktime += task_time_full
-                    products += 1
+                    int_tasks.append(task)
                     debug_pg += 1
             # We log an error if we passed a too narrow interval (this might mess up the output)
             if debug_pg > 1:
-                log_warning(f"WARNING: INTERVAL TOO NARROW\nInterval: {int_start}-{int_end}\n\
+                log_warning("INTERVAL TOO NARROW", f"Interval: {int_start}-{int_end}\n\
                     Day:\n\tActor{self.actor},\n\tDate:{self.date}\n\
                         Task:\n\t{task}")
-        # TODO: Somehow we do not calculate worktime. Need to debug!!!
-        return products / worktime
+        return int_tasks
 
     def get_multiple_interval_productivities(self, intervals: Optional[List[Tuple[str, str]]] = None) -> List[float]:
-        '''Using the single_interval_productivity function on a list of intervals (default: DEFAULT_DAY_INTERVALS).'''
+        '''Calculates the productivity in a list of intervals (default: DEFAULT_DAY_INTERVALS).'''
         global DEFAULT_DAY_INTERVALS
         productivities: List[float] = []
         if intervals is None:
             intervals = DEFAULT_DAY_INTERVALS
         # Calculating individual interval productivities
         for interval in intervals:
-            prod = self.get_single_interval_productivity(*interval)
-            productivities.append(prod)
+            worktime_seconds: float = 0
+            tasks_in_interval: List[Task] = self.get_tasks_in_interval(*interval)
+            for task in tasks_in_interval:
+                worktime_seconds += task.get_task_time_in_seconds()
+            # Productivity = tasks done / worktime in hours
+            productivities.append(len(tasks_in_interval) / (worktime_seconds / 3600) if worktime_seconds > 0 else 0)
         return productivities
 
 

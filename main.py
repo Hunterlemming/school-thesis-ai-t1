@@ -1,5 +1,6 @@
 from typing import List
 import pandas as pd
+from model.day import DEFAULT_DAY_INTERVALS
 from model.log import LogSummary
 
 from services.log_parser import parse_default_csv
@@ -22,4 +23,5 @@ if __name__ == "__main__":
     # create_csv_1(summary)
     print(summary.days[0])
     wh = summary.days[0].get_multiple_interval_productivities()
-    print(wh)
+    for i, prod in enumerate(wh):
+        print(f"{DEFAULT_DAY_INTERVALS[i]}: {prod}")
