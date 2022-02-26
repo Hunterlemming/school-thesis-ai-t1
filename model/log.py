@@ -1,6 +1,4 @@
-from typing import Callable, Dict, List, Union
-
-import pandas as pd
+from typing import Dict, List, Union
 
 from model.day import DaySummary
 
@@ -20,35 +18,15 @@ class LogSummary:
     }
     """
 
+    def get_day_by_index(self, index: int) -> Union[Dict[str, DaySummary], None]:
+        if index < 0 or index > len(self.days.keys()):
+            return None
+        return self.days[list(self.days.keys())[index]]
 
-    def _filter_for_same_date_days(self, param_date: pd.Timestamp) -> List[DaySummary]:
-        '''The core loop of both get_same_date_days functions I didn't want to duplicate.'''
-        filtered_days: List[DaySummary] = []
-        for day in self.days:
-            current_dt = pd.to_datetime(str(day.date))
-            if param_date == current_dt:
-                filtered_days.append(day)
-            if param_date < current_dt:
-                break
-        return filtered_days
-
-    def get_same_date_days_with_date(self, date: Union[pd.Timestamp.date, str]) -> List[DaySummary]:
-        '''Returns all the Day-s of all actors, who worked on the parameter date.'''
-        param_dt = pd.to_datetime(str(date))
-        same_date_days: List[DaySummary] = self._filter_for_same_date_days(param_dt)
-        return same_date_days
-
-    def get_same_date_days_with_index(self, index: int) -> List[DaySummary]:
-        '''Same as get_same_date_days(), but instead of passing a date we pass a day index.'''
-        if index > len(self.days) - 1:
-            return []
-        param_dt = pd.to_datetime(str(self.days[index].date))
-        same_date_days: List[DaySummary] = self._filter_for_same_date_days(param_dt)
-        return same_date_days
-
-    def get_all_same_date_days(self):
-        #TODO: This, you will probably need to refactor the class 2, to prevent double loop!
-        pass
+    def get_day_by_date(self, date_str: str) -> Union[Dict[str, DaySummary], None]:
+        if date_str not in self.days.keys():
+            return None
+        return self.days[date_str]
 
 
     def __str__(self) -> str:
