@@ -9,7 +9,11 @@ Date-time;activity;actor;state
 2022.02.18-10:24:35;forrasztás;A5;start
 2022.02.18-10:25:35;csavarozás;A1;end
 2022.02.18-10:25:35;forrasztás;A5;end
+2022.02.18-11:23:34;forrasztás;A5;start
 2022.02.18-11:24:34;csavarozás;A1;start
+2022.02.18-11:25:34;forrasztás;A5;end
+2022.02.18-12:33:00;forrasztás;A5;start
 2022.02.18-12:34:00;csavarozás;A1;end
+2022.02.18-12:35:00;forrasztás;A5;end
 2022.02.22-11:24:34;csavarozás;A1;start
 2022.02.22-12:34:00;csavarozás;A1;end

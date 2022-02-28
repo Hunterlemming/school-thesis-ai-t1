@@ -20,13 +20,13 @@ def equal_to(t1: Union[str, pd.Timestamp.time], t2: Union[str, pd.Timestamp.time
     t1_date, t2_date = pd.to_datetime(str(t1)), pd.to_datetime(str(t2))
     return t1_date == t2_date
 
-def get_overlapping_time(main_tasks: List[Task], other_tasks: List[Task], overlapping_time: Optional[float] = 0) -> float:
+def get_overlapping_time(main_tasks: List[Task], other_tasks: List[Task]) -> float:
     '''Returns the overlapping time (in seconds) between two lists of tasks.'''
     if main_tasks is None or other_tasks is None:
         return 0
     task_time_delta = Task._task_time_delta_in_seconds
+    overlapping_time = 0
     # Checking for overlaps
-    new_tasks: List[Task] = []
     for m_task in main_tasks:
         for o_task in other_tasks:
             # The other is before the main
@@ -37,12 +37,7 @@ def get_overlapping_time(main_tasks: List[Task], other_tasks: List[Task], overla
                 break
             # The other task overlaps the main
             end_point: pd.Timestamp.time = earlier_of(m_task.end, o_task.end)
-            inner_overlap: float = task_time_delta(later_of(m_task.start, o_task.start), end_point)
+            start_point: pd.Timestamp.time = later_of(m_task.start, o_task.start)
+            inner_overlap: float = task_time_delta(start_point, end_point)
             overlapping_time += inner_overlap
-            # Adding a new task with the rest of the other's time
-            if not equal_to(end_point, o_task.end):
-                remaining_o_task = Task(o_task.activity, m_task.end, o_task.end)
-                new_tasks.append(remaining_o_task)
-    if len(new_tasks) == 0:
-        return overlapping_time
-    return get_overlapping_time(main_tasks, new_tasks, overlapping_time)
+    return overlapping_time
