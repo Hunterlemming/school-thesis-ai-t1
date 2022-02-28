@@ -1,13 +1,13 @@
-from typing import Union
+from typing import Optional, Union
 import pandas as pd
 
 
 class Task:
 
-    def __init__(self, activity: str, start: pd.Timestamp.time) -> None:
+    def __init__(self, activity: str, start: pd.Timestamp.time, end: Optional[pd.Timestamp.time] = None) -> None:
         self.activity: str = activity
         self.start: pd.Timestamp.time = start
-        self.end: pd.Timestamp.time = None
+        self.end: pd.Timestamp.time = end
 
 
     @staticmethod
