@@ -21,18 +21,23 @@ class DaySummary:
         '''Returns the daily number of products.'''
         return len(self.tasks)
 
-    def get_daily_hours_worked(self) -> float:
-        '''Returns the amount of hours worked this day (with 3 decimals).'''
+    def get_daily_worktime(self, scale: str = 's', dec: int = 0) -> float:
+        '''Returns the worktime this day (default: seconds, zero decimals).'''
         worktime: float = 0
         # Calculating the worktime in seconds
         for task in self.tasks:
             worktime += Task._task_time_delta_in_seconds(task.start, task.end)
-        # Returning the worktime in hours (3 decimals)
-        return round(worktime / 3600, 3)
+        # Returning the worktime in preferred format
+        if scale == 's':
+            return worktime
+        if scale == 'm':
+            return round(worktime / 60, dec)
+        if scale == 'h':
+            return round(worktime / 3600, dec)
 
     def get_daily_product_per_hour_performance(self) -> float:
         '''Returns the average number of products created in a workhour.'''
-        return self.get_daily_all_number_of_products() / self.get_daily_hours_worked()
+        return self.get_daily_all_number_of_products() / self.get_daily_worktime('h',3)
 
 
     def get_tasks_in_interval(

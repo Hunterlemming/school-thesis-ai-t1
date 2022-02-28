@@ -1,5 +1,4 @@
-from typing import List, Optional, Union
-
+from typing import List, Union
 import pandas as pd
 
 from model.task import Task
@@ -20,7 +19,7 @@ def equal_to(t1: Union[str, pd.Timestamp.time], t2: Union[str, pd.Timestamp.time
     t1_date, t2_date = pd.to_datetime(str(t1)), pd.to_datetime(str(t2))
     return t1_date == t2_date
 
-def get_overlapping_time(main_tasks: List[Task], other_tasks: List[Task]) -> float:
+def get_overlapping_time_in_seconds(main_tasks: List[Task], other_tasks: List[Task]) -> float:
     '''Returns the overlapping time (in seconds) between two lists of tasks.'''
     if main_tasks is None or other_tasks is None:
         return 0
