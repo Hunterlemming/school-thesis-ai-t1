@@ -22,7 +22,7 @@ class DaySummary:
         return len(self.tasks)
 
     def get_daily_worktime(self, scale: str = 's', dec: int = 0) -> float:
-        '''Returns the worktime this day (default: seconds, zero decimals).'''
+        '''Returns the worktime this day. (default: seconds, 0 decimals)'''
         worktime: float = 0
         # Calculating the worktime in seconds
         for task in self.tasks:
@@ -35,9 +35,9 @@ class DaySummary:
         if scale == 'h':
             return round(worktime / 3600, dec)
 
-    def get_daily_product_per_hour_performance(self) -> float:
-        '''Returns the average number of products created in a workhour.'''
-        return self.get_daily_all_number_of_products() / self.get_daily_worktime('h',3)
+    def get_daily_product_per_hour_performance(self, dec: int = 3) -> float:
+        '''Returns the average number of products created in a workhour. (default: 3 decimals)'''
+        return round(self.get_daily_all_number_of_products() / self.get_daily_worktime('h',3), dec)
 
 
     def get_tasks_in_interval(
@@ -79,7 +79,7 @@ class DaySummary:
         return int_tasks
 
     def get_multiple_interval_productivities(self, intervals: Optional[List[Tuple[str, str]]] = None) -> List[float]:
-        '''Calculates the productivity in a list of intervals (default: DEFAULT_DAY_INTERVALS).'''
+        '''Calculates the productivity in a list of intervals. (default: DEFAULT_DAY_INTERVALS)'''
         global DEFAULT_DAY_INTERVALS
         productivities: List[float] = []
         if intervals is None:

@@ -1,2 +1,2 @@
-Creating csv2
-Creating csv3
+Create more data
+Create an LSTM for each transformed csv

@@ -7,6 +7,7 @@ from model.task import Task
 
 
 def get_or_create_day(days: Dict[str, Dict[str, DaySummary]], actor: str, date: pd.Timestamp.date) -> DaySummary:
+    '''Returns the DaySummary with the given actor and date if it exists, otherwise creates a new one.'''
     date_str = str(date)
     new_summary = DaySummary(actor, date)
     if date_str in days.keys(): 
@@ -19,21 +20,21 @@ def get_or_create_day(days: Dict[str, Dict[str, DaySummary]], actor: str, date: 
 
 
 def parse_default_csv() -> LogSummary:
+    '''Parsing the thesis's default csv format.'''
+    # Accessing csv
     input_csv = pd.read_csv('./data/raw_input.csv', sep=';', parse_dates=['Date-time'])
-    
+    # Initializing variables
     actors: List[str] = []
     activities: List[str] = [] 
     days: Dict[str, Dict[str, DaySummary]] = {}
-
     unfinished_tasks: Dict[str, Task] = {}
-
+    # Iterating over the rows of the csv
     for index, row in input_csv.iterrows():
         task = None
-        
         actor = row['actor']
         activity = row['activity']
         timestamp = row['Date-time']
-
+        # Parsing the row
         if row['state'] == "start":
             # Starting a new task (unfinished)
             unfinished_tasks[actor] = Task(activity, timestamp.time())
@@ -49,8 +50,8 @@ def parse_default_csv() -> LogSummary:
             # Removing task from the unfinished tasks
             unfinished_tasks.pop(actor)
         if task is not None:
-            # Adding a finished task to its day
+            # Adding a finished task to its DaySummary
             day = get_or_create_day(days, actor, timestamp.date())
             day.tasks.append(task)
-
+    # Returning the parsed log
     return LogSummary(actors, activities, days)
