@@ -19,10 +19,10 @@ def get_or_create_day(days: Dict[str, Dict[str, DaySummary]], actor: str, date: 
     return new_summary                          # Adding a brand new day, if necessary
 
 
-def parse_default_csv() -> LogSummary:
+def parse_default_csv(location: str) -> LogSummary:
     '''Parsing the thesis's default csv format.'''
     # Accessing csv
-    input_csv = pd.read_csv('./data/raw_input.csv', sep=';', parse_dates=['Date-time'])
+    input_csv = pd.read_csv(location, sep=';', parse_dates=['Date-time'])
     # Initializing variables
     actors: List[str] = []
     activities: List[str] = [] 
