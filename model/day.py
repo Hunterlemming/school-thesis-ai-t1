@@ -78,8 +78,9 @@ class DaySummary:
                         Task:\n\t{task}")
         return int_tasks
 
-    def get_multiple_interval_productivities(self, intervals: Optional[List[Tuple[str, str]]] = None) -> List[float]:
-        '''Calculates the productivity in a list of intervals. (default: DEFAULT_DAY_INTERVALS)'''
+    def get_multiple_interval_productivities(self, 
+        intervals: Optional[List[Tuple[str, str]]] = None, dec: int = 3) -> List[float]:
+        '''Calculates the productivity in a list of intervals. (default: DEFAULT_DAY_INTERVALS, 3 decimals)'''
         global DEFAULT_DAY_INTERVALS
         productivities: List[float] = []
         if intervals is None:
@@ -91,7 +92,8 @@ class DaySummary:
             for task in tasks_in_interval:
                 worktime_seconds += task.get_task_time_in_seconds()
             # Productivity = tasks done / worktime in hours
-            productivities.append(len(tasks_in_interval) / (worktime_seconds / 3600) if worktime_seconds > 0 else 0)
+            productivity = len(tasks_in_interval) / (worktime_seconds / 3600) if worktime_seconds > 0 else 0
+            productivities.append(round(productivity, dec))
         return productivities
 
 

@@ -19,3 +19,15 @@ Date-time;activity;actor;state
 2022.03.01-12:24:00;csavarozás;A1;end
 2022.03.01-14:00:00;csavarozás;A1;start
 2022.03.01-14:40:00;csavarozás;A1;end
+2022.03.02-08:00:00;csavarozás;A1;start
+2022.03.02-08:30:00;csavarozás;A1;end
+2022.03.02-10:00:00;csavarozás;A1;start
+2022.03.02-10:00:00;forrasztás;A2;start
+2022.03.02-10:10:14;forrasztás;A2;end
+2022.03.02-10:17:03;csavarozás;A1;end
+2022.03.02-12:00:00;csavarozás;A1;start
+2022.03.02-12:00:00;hegesztés;A3;start
+2022.03.02-12:10:00;hegesztés;A3;end
+2022.03.02-12:20:00;csavarozás;A1;end
+2022.03.02-14:00:00;csavarozás;A1;start
+2022.03.02-14:40:00;csavarozás;A1;end
