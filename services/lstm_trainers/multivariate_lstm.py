@@ -10,7 +10,7 @@ from services.lstm_trainers.base_lstm import BaseLSTM
 from utils.trainer_utils import print_training_accuracy, show_learning_effectiveness_in_epochs, show_training_result
 
 
-MODEL_LOCATION = './trained_models/LSTM - Multivariate Productivity'
+DEFAULT_LOCATION = './trained_models/LSTM - Multivariate Productivity'
 
 
 class MultiVariateTrainer(BaseLSTM):
@@ -70,8 +70,8 @@ class MultiVariateTrainer(BaseLSTM):
         # model.save(MODEL_LOCATION)
         self._model = model
 
-    def run_model(self):
-        trained_model: Sequential = self.get_model(MODEL_LOCATION)
+    def run_model(self, model_location: str = DEFAULT_LOCATION, new_model: bool = False):
+        trained_model: Sequential = self.get_model(model_location=model_location, new_model=new_model)
         prediction_test = []
         # Creating a window-sized starting batch
         batch_one: np.ndarray = self.train_scaled[-self.lookback_window_size:]
@@ -85,7 +85,7 @@ class MultiVariateTrainer(BaseLSTM):
             new_var = self.test_scaled[i,:]                             # We already know the independent variables,
             new_var = new_var.reshape(1, self.dim - 1)                  # so the only thing we have to do is creating
             new_test = np.insert(new_var, 0, [first_pred], axis=1)      # a new row with these and the freshly predicted
-            new_test = new_test.reshape(1, 1, 2)                        # target variable (First_Pred)
+            new_test = new_test.reshape(1, 1, self.dim)                 # target variable (First_Pred)
             # Adding the prediction to the starting batch while removing its first value
             batch_new = np.append(batch_new[:,1:,:], new_test, axis=1)
         # We can't simply use the sc to convert our result back to the original scale,
@@ -100,4 +100,4 @@ class MultiVariateTrainer(BaseLSTM):
         # Evaluating the result
         print_training_accuracy(real_values, predictions)
         show_training_result(real_values, predictions, 
-            title='Univariate - LSTM', xlabel='Time (d)', ylabel='Productivity')
+            title='Multivariate - LSTM', xlabel='Time (d)', ylabel='Productivity')

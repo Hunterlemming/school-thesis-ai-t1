@@ -17,7 +17,7 @@ class BaseLSTM:
         pass
 
     @abstractmethod
-    def run_model(self, model_location: str) -> None:
+    def run_model(self, model_location: str, new_model: bool = False) -> None:
         '''Runs the model on the test dataset and evaluates the result.'''
         pass
 

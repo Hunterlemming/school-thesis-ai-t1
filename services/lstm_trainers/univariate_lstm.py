@@ -70,8 +70,8 @@ class UniVariateTrainer(BaseLSTM):
         # model.save(MODEL_LOCATION)
         self._model = model
 
-    def run_model(self, model_location: str = DEFAULT_LOCATION) -> None:
-        trained_model: Sequential = self.get_model(model_location)
+    def run_model(self, model_location: str = DEFAULT_LOCATION, new_model: bool = False) -> None:
+        trained_model: Sequential = self.get_model(model_location, new_model)
         prediction_test = []
         # Creating a window-sized starting batch
         batch_one: np.ndarray = self.train_scaled[-self.lookback_window_size:]
