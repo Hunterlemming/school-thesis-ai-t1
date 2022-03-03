@@ -1,29 +1,29 @@
 import numpy as np
 import pandas as pd
-import math
 
-from matplotlib import pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
-from sklearn.metrics import mean_squared_error, r2_score
-from keras.models import Sequential, load_model
+from keras.models import Sequential
 from keras.layers import LSTM, Dense, Dropout
 
-
+from services.lstm_trainers.base_lstm import BaseLSTM
 from utils.trainer_utils import print_training_accuracy, show_learning_effectiveness_in_epochs, show_training_result
 
 
-MODEL_LOCATION = './trained_models/LSTM - Single Productivity'
+DEFAULT_LOCATION = './trained_models/LSTM - Univariate Productivity'
 
 
-class SingleProductivityTrainer:
+class UniVariateTrainer(BaseLSTM):
 
-    def __init__(self, data_location: str, test_size: float = 1/3, window_size: int = 7) -> None:
+    def __init__(self, data_location: str, target_column: int, 
+        test_size: float = 1/3, window_size: int = 7) -> None:
+        super().__init__()
+        tc = target_column
         df: pd.DataFrame = pd.read_csv(data_location, sep=';', parse_dates=['timestamp'])
         df.dropna(inplace=True)
         # Splitting csv into training and testing sets
         end_of_training_set = round(len(df.index) * (1 - test_size))
-        self.train: np.ndarray = df.iloc[:end_of_training_set, 1:2].values
-        self.test: np.ndarray = df.iloc[end_of_training_set:, 1:2].values
+        self.train: np.ndarray = df.iloc[:end_of_training_set, tc:tc+1].values
+        self.test: np.ndarray = df.iloc[end_of_training_set:, tc:tc+1].values
         # Scaling data (normalizing)
         self.scaler: MinMaxScaler = MinMaxScaler(feature_range=(0, 1))
         self.train_scaled: np.ndarray = self.scaler.fit_transform(self.train)
@@ -37,25 +37,8 @@ class SingleProductivityTrainer:
         self.lookback_window_size: int = window_size
         self.train_x_lookback: np.ndarray = np.array(x_train)
         self.train_y_lookback: np.ndarray = np.array(y_train)
-        # Registering the model as a private variable
-        self._model: Sequential = None
-
-    def get_model(self, new_model: bool = False) -> Sequential:
-        '''Returning the model, while making sure we have one.'''
-        if new_model:
-            # Creating a new model
-            self.train_new_model()
-        if self._model is None:
-            try:
-                # Loading already exiting model
-                self._model = load_model(MODEL_LOCATION)
-            except OSError:
-                # Creating a new model
-                self.train_new_model()
-        return self._model
 
     def train_new_model(self) -> None:
-        '''Trains a new model from the data passed to the constructor.'''
         # Creating the model base
         model = Sequential()
         # Creating the INPUT layer
@@ -87,9 +70,8 @@ class SingleProductivityTrainer:
         # model.save(MODEL_LOCATION)
         self._model = model
 
-    def run_model(self):
-        '''Runs the model on the test dataset and evaluates the result.'''
-        trained_model: Sequential = self.get_model()
+    def run_model(self, model_location: str = DEFAULT_LOCATION) -> None:
+        trained_model: Sequential = self.get_model(model_location)
         prediction_test = []
         # Creating a window-sized starting batch
         batch_one: np.ndarray = self.train_scaled[-self.lookback_window_size:]
@@ -106,4 +88,5 @@ class SingleProductivityTrainer:
         predictions = self.scaler.inverse_transform(prediction_test)
         # Evaluating the result
         print_training_accuracy(self.test, predictions)
-        show_training_result(self.test, predictions)
+        show_training_result(self.test, predictions, 
+            title='Univariate - LSTM', xlabel='Time (d)', ylabel='Productivity')

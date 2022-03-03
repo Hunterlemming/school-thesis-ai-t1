@@ -17,11 +17,12 @@ def print_training_accuracy(test: np.ndarray, predictions: np.ndarray):
     Rsquare = r2_score(test, predictions)
     print(f"Root-mean-square-deviation = {RMSE}\nCoefficient of determination = {Rsquare}")
 
-def show_training_result(test: np.ndarray, predictions: np.ndarray):
+def show_training_result(test: np.ndarray, predictions: np.ndarray, 
+    title: str = 'LSTM - Forecast', xlabel='Time', ylabel='Value'):
     plt.plot(test, color='red', label="Actual Values")
     plt.plot(predictions, color='blue', label="Predicted Values")
-    plt.title('LSTM - Univariate Forecast')
-    plt.xlabel('Time (h)')
-    plt.ylabel('Solar Irradiance')
+    plt.title(title)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
     plt.legend()
     plt.show()
