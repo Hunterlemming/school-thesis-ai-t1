@@ -26,7 +26,7 @@ class DaySummary:
         worktime: float = 0
         # Calculating the worktime in seconds
         for task in self.tasks:
-            worktime += Task.TASK_TIME_DELTA_IN_SECONDS(task.start, task.end)
+            worktime += task.get_task_time_in_seconds()
         # Returning the worktime in preferred format
         if scale == 's':
             return worktime
