@@ -1,6 +1,8 @@
 from typing import Optional, Union
 import pandas as pd
 
+from utils.logger import log_error
+
 
 class Task:
 
@@ -29,6 +31,9 @@ class Task:
         self.end = end
 
     def get_task_time_in_seconds(self) -> float:
+        if self.end is None:
+            log_error("Time requested in an open task!", f"\tActivity:{self.activity}\n\tStart:{self.start}")
+            return 0
         return Task._task_time_delta_in_seconds(self.start, self.end)
 
 

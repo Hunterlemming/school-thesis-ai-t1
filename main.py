@@ -31,7 +31,7 @@ def ai_interval_productivity() -> None:
 if __name__ == "__main__":
     # parse_input('./data/raw_input_2.csv')
     
-    # ai_single_productivity()
+    ai_single_productivity()
     # ai_pair_productivity()
     # ai_interval_productivity()
-    ai_multi_workmate_productivity()
+    # ai_multi_workmate_productivity()
