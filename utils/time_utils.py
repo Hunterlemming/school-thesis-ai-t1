@@ -23,7 +23,7 @@ def get_overlapping_time_in_seconds(main_tasks: List[Task], other_tasks: List[Ta
     '''Returns the overlapping time (in seconds) between two lists of tasks.'''
     if main_tasks is None or other_tasks is None:
         return 0
-    task_time_delta = Task._task_time_delta_in_seconds
+    task_time_delta = Task.TASK_TIME_DELTA_IN_SECONDS
     overlapping_time = 0
     # Checking for overlaps
     for m_task in main_tasks:

@@ -26,7 +26,7 @@ class DaySummary:
         worktime: float = 0
         # Calculating the worktime in seconds
         for task in self.tasks:
-            worktime += Task._task_time_delta_in_seconds(task.start, task.end)
+            worktime += Task.TASK_TIME_DELTA_IN_SECONDS(task.start, task.end)
         # Returning the worktime in preferred format
         if scale == 's':
             return worktime
@@ -43,7 +43,7 @@ class DaySummary:
     def get_tasks_in_interval(
         self, int_start: Union[str, pd.Timestamp.time], int_end: Union[str, pd.Timestamp.time]) -> List[Task]:
         '''Returns the tasks in a certain timeframe.'''
-        task_time_delta = Task._task_time_delta_in_seconds
+        task_time_delta = Task.TASK_TIME_DELTA_IN_SECONDS
         int_tasks: List[Task] = []
         for task in self.tasks:
             debug_pg: int = 0

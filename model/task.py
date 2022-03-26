@@ -13,7 +13,7 @@ class Task:
 
 
     @staticmethod
-    def _task_time_delta_in_seconds(start: Union[str, pd.Timestamp.time], end: Union[str, pd.Timestamp.time]) -> float:
+    def TASK_TIME_DELTA_IN_SECONDS(start: Union[str, pd.Timestamp.time], end: Union[str, pd.Timestamp.time]) -> float:
         """
             Returns the difference between two timestamps in seconds.\n
             \tIf the **value > 0** the second event happened **after** the first.\n
@@ -34,7 +34,7 @@ class Task:
         if self.end is None:
             log_error("Time requested in an open task!", f"\tActivity:{self.activity}\n\tStart:{self.start}")
             return 0
-        return Task._task_time_delta_in_seconds(self.start, self.end)
+        return Task.TASK_TIME_DELTA_IN_SECONDS(self.start, self.end)
 
 
     def __str__(self) -> str:

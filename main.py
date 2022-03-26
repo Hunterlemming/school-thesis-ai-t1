@@ -29,9 +29,9 @@ def ai_interval_productivity() -> None:
     ai.run_model(new_model=True)
 
 if __name__ == "__main__":
-    # parse_input('./data/raw_input_2.csv')
+    parse_input('./data/raw_input_2.csv')
     
-    ai_single_productivity()
+    # ai_single_productivity()
     # ai_pair_productivity()
     # ai_interval_productivity()
     # ai_multi_workmate_productivity()
