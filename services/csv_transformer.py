@@ -39,7 +39,7 @@ def create_type_1_csv(log: LogSummary, actor: str, daily: bool,
 
 def create_type_2_csv(log: LogSummary, actor_m: str, actor_os: List[str] = None, file_name: str = 'gen_2.csv') -> None:
     '''Writes actor's productivity along with common worktime percentages (with other actors) during the days into a csv.'''
-    rows: List[List[pd.Timestamp.date, int, float]] = []    # This is *float for len(actor_os) number of arguments
+    rows: List[List[pd.Timestamp.date, float, float]] = []    # The second is *float for len(actor_os) number of arguments
     if actor_os is None or len(actor_os) == 0:
         actor_os = tuple(filter(lambda a : a != actor_m, log.actors))
     # Looping through days
